@@ -1,0 +1,67 @@
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { format, toDate } from "date-fns";
+import { useGetEnergyGenerationRecordsBySolarUnitQuery } from "@/lib/redux/query";
+import { use } from "react";
+
+const DataCard = ({ solarUnitId, title }) => {
+
+  const {data , isLoading , isError , error} = useGetEnergyGenerationRecordsBySolarUnitQuery({
+    id : solarUnitId,
+    groupBy : "date",
+    limit : 7,
+  }
+  );
+
+
+  if (isLoading) {
+    return (
+      <Card className="rounded-md p-4 w-full">
+        <Skeleton className="h-6 w-64 mb-4" />
+        <div className="grid grid-cols-7 gap-4 mt-4">
+          {Array.from({ length: 7 }).map((_, index) => (
+            <div key={index} className="col-span-1 px-2 py-1">
+              <div className="flex flex-col items-center justify-center space-y-2">
+                <Skeleton className="h-3 w-12" />
+                <Skeleton className="h-6 w-16" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+    );
+  }
+
+  if (!data || isError) {
+    return null;
+  }
+
+  return (
+    <Card className="rounded-md p-4 w-full">
+      <h2 className="text-xl font-medium text-foreground">
+        {title}
+      </h2>
+      <div className="grid grid-cols-7 gap-4 mt-4 ">
+        {data.slice(0, 7).map((el) => {
+          return (
+            <div
+              key={el._id.date}
+              className="col-span-1 px-2 py-1  "
+            >
+              <div className="flex flex-col items-center justify-center bg-gray-50 p-4 rounded-lg  hover:bg-blue-50">
+                <h3 className="text-xs text-gray-500 font-medium ">
+                  {format(toDate(el._id.date), "MMM d")}
+                </h3>
+                <p className="text-lg font-bold text-foreground">
+                  {el.totalEnergy} kWh
+                </p>
+              </div>
+            </div>  
+          );
+        })}
+      </div>
+    </Card>
+  );
+};
+
+export default DataCard;

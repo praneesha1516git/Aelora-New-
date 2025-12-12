@@ -8,13 +8,12 @@ export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: baseUrl  , prepareHeaders: async (headers) => {
     //window.clerk means accessing the Clerk instance from the global window object
-    console.log("Preparing headers for API request...");
+ 
     const clerk = window.Clerk;
     if (clerk) {
       console.log("Clerk instance found.");
        const token = await clerk.session.getToken();
 
-       console.log("Clerk Token:", token); // Log the token for debugging
        if(token) {
         // Set the Authorization header with the Clerk token
          headers.set("Authorization", `Bearer ${token}`);
@@ -43,10 +42,35 @@ export const api = createApi({
   //endpoint to get solar unit by ID
   getSolarUnitById : build.query ({
     query : (id) => `/solar-units/${id}`,
-  })
   }),
 
+
+  createSolarUnit : build.mutation ({
+    query : (data) => ({
+      url: '/solar-units',
+      method: 'POST',
+      body: data,
+    })
+  }),
+
+  editSolarUnit : build.mutation ({
+    query : ({id , data}) => ({
+      url: `/solar-units/${id}`,
+      method: 'PUT',
+      body: data,
+    })
+  }),
+
+    getAllUsers : build.query ({
+      query : () => `/users`,
+    }),
+
+  }),
 });
+
+
+
+
 
 
 // Export hooks for usage in functional components, which are
@@ -56,4 +80,7 @@ export const {
   useGetSolarUnitForUserQuery ,
    useGetSolarUnitsQuery,
    useGetSolarUnitByIdQuery,
+   useCreateSolarUnitMutation,
+   useEditSolarUnitMutation,
+    useGetAllUsersQuery,
    } = api;

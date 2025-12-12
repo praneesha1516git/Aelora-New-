@@ -6,6 +6,7 @@ import { se } from "date-fns/locale";
 import { Zap } from "lucide-react";
 import { use, useState } from "react";
 import { useNavigate } from "react-router";
+import { Link } from "react-router";
 
 export function SolarUnitsTab() {
   const [searchTerm , setSearchTerm] = useState("");
@@ -33,7 +34,9 @@ const filteredUnits = searchTerm !== "" ? solarUnits.filter((unit) =>
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <Button>Add New Unit</Button>
+        <Button asChild>Add New Uni
+          <Link to="/admin/solar-units/create">Add New Unit</Link>
+        </Button>
       </div>
 
       <div className="w-full max-w-md">
@@ -72,7 +75,7 @@ const filteredUnits = searchTerm !== "" ? solarUnits.filter((unit) =>
                 </p>
               </div>
               <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" className="flex-1" onClick={() => navigate(`/admin/solar-units/${unit._id}`)}>
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => navigate(`/admin/solar-units/${unit._id}/edit`)}>
                   Edit
                 </Button>
                 <Button variant="outline" size="sm" className="flex-1" onClick={() => navigate(`/admin/solar-units/${unit._id}`)}>

@@ -13,36 +13,50 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useCreateSolarUnitMutation } from "@/lib/redux/query"
+import { useEditSolarUnitMutation } from "@/lib/redux/query"
+import { useParams } from "react-router"
+import { useGetAllUsersQuery } from "@/lib/redux/query"
 
 const formSchema = z.object({
-      serialNumber: z.string().min(1, { message: "Serial number is required" }),
+    serialNumber: z.string().min(1, { message: "Serial number is required" }),
     installationDate: z.string().min(1, { message: "Installation date is required" }),
     capacity: z.number().positive({ message: "Capacity must be a positive number" }),
     status: z.enum(["ACTIVE", "INACTIVE", "MAINTENANCE"], { message: "Please select a valid status" }),
+    userId: z.string().min(1, { message: "User ID is required" }),
 });
 
-export function CreateSolarUnitForm() {
+export function EditSolarUnitForm({ solarUnit }) {
     const form = useForm({
-        
         resolver: zodResolver(formSchema),
+        defaultValues: {
+            serialNumber: solarUnit.serialNumber,
+            installationDate: solarUnit.installationDate,
+            capacity: solarUnit.capacity,
+            status: solarUnit.status,
+            userId: solarUnit.userId,
+        },
     })
- 
-   const [createSolarUnit , {isLoading:isCreatingSolarUnit}] = useCreateSolarUnitMutation();
 
-   const submit = async function onSubmit(values) {
+    const { id } = useParams();
+
+    const [editSolarUnit, { isLoading: isEditingSolarUnit }] = useEditSolarUnitMutation();
+
+    const { data: users, isLoading: isLoadingUsers, isError: isErrorUsers, error: errorUsers } = useGetAllUsersQuery();
+
+
+    console.log(users);
+
+    async function onSubmit(values) {
         try {
-            await createSolarUnit(values).unwrap();
-            alert("Solar unit created successfully!");
-            form.reset();
+            await editSolarUnit({ id, data: values }).unwrap();
         } catch (error) {
-            console.error("Failed to create solar unit: ", error);
-            alert("Error creating solar unit: " + (error?.data?.message || error.message));
+            console.error(error);
         }
     }
-return(
-    <Form {...form}>
-            <form onSubmit={form.handleSubmit(submit)} className="space-y-8">
+
+    return (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
                     name="serialNumber"
@@ -104,8 +118,30 @@ return(
                         </FormItem>
                     )}
                 />
-                  <Button type="submit" disabled={isCreatingSolarUnit}>{isCreatingSolarUnit ? "Creating..." : "Create"}</Button>
+                <FormField
+                    control={form.control}
+                    name="userId"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>User</FormLabel>
+                            <FormControl>
+                                <Select value={field.value || ""} onValueChange={field.onChange}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select User" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {users?.map((user) => (
+                                            <SelectItem key={user._id} value={user._id}>{user.email}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <Button type="submit" disabled={isEditingSolarUnit}>{isEditingSolarUnit ? "Editing..." : "Edit"}</Button>
             </form>
         </Form>
-
- )}
+    );
+}

@@ -8,6 +8,7 @@ import { connectDB } from "./infrastructure/db";
 import cors from "cors"
 import webhooksRouter from "./api/webhooks";
 import { clerkMiddleware } from "@clerk/express";
+import usersRouter from "./api/users";
 
 const server = express();
 server.use(cors({origin:"http://localhost:5173"}));  // Enable CORS
@@ -22,6 +23,7 @@ server.use(express.json()); // Middleware to parse JSON bodies - convert json to
 
 server.use("/api/solar-units", solarUnitRouter);  // Routes for solar units - middleware
 server.use("/api/energy-generation-records", energyGenerationRecordRouter);  // Routes for energy generation records - middleware
+server.use("/api/users", usersRouter);  // Routes for users - middleware
 
 server.use(globalErrorHandler);  // no response generated from above router middlewares = Global error handling middleware
 

@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router";
 import { EditSolarUnitForm } from "./components/EditSolarUnitForm";
 
 
-import { useGetSolarUnitByIdQuery } from "@/lib/redux/query";
 
 export default function SolarUnitEditPage() {
 

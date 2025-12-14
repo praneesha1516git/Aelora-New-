@@ -1,5 +1,5 @@
-import Tab from "./Tab";
-import EnergyProductionCards from "./EnergyProductionCards";
+import Tab from "./EnergyTab";
+import EnergyProductionCards from "../../dashboard/components/EnergyProductionCardss";
 import { useSelector } from "react-redux";
 import {Button} from "@/components/ui/button"
 import { subDays, toDate, format } from "date-fns";

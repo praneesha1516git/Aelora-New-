@@ -70,11 +70,11 @@ const Navigation = () => {
 
         <div className={"flex gap-2 items-center"}>
           <SignedOut>
-            <Button as asChild variant={"outline"}>
+            <Button asChild variant={"outline"}>
               <Link to="/sign-in" className={"flex items-center gap-3 px-3 py-2"}>Sign In</Link>
             </Button>
 
-            <Button as asChild>
+            <Button asChild>
               <Link to="/sign-up" className={"flex items-center gap-3 px-3 py-2"}>Sign Up</Link>
             </Button>
           </SignedOut>

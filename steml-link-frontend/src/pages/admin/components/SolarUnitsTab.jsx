@@ -34,8 +34,8 @@ const filteredUnits = searchTerm !== "" ? solarUnits.filter((unit) =>
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <Button asChild>Add New Uni
-          <Link to="/admin/solar-units/create">Add New Unit</Link>
+        <Button asChild>
+          <Link to="/admin/solar-units/create" className={"flex items-center gap-3 px-3 py-2"}>Add New Unit</Link>
         </Button>
       </div>
 

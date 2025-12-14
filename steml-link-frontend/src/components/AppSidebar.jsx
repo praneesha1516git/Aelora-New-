@@ -20,7 +20,7 @@ const items = [
   },
   {
     title: "Anomalies",
-    url: "/dashboard/anomaly",
+    url: "/dashboard/anomalies",
     icon: TriangleAlert,
   },
   {
